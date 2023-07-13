@@ -14,4 +14,10 @@ CHIP Inc16 {
 
     PARTS:
    // Put you code here:
+
+   Add16(a=in, b[0]=true, out=out); 
+/* Unaffected bits are set by default to false. 
+   The width of b is deduced implicitely to 16bits
+   Thus only b[0] = 1, b[1..15]=0
+*/
 }
