@@ -9,4 +9,45 @@
 // This program only needs to handle arguments that satisfy
 // R0 >= 0, R1 >= 0, and R0*R1 < 32768.
 
-// Put your code here.
+// Put your code here.              
+
+    @R0
+    D = M               
+    @x
+    M = D               // x = RAM[0]
+    @R1
+    D = M      
+    @R2
+    M = 0         
+    @n
+    M = D               // n = RAM[1]
+    @i                  
+    M = 1               // i = 0 
+    @sum
+    M = 0               // sum = 0
+
+(LOOP)                  // add n times x to sum
+    @i                  // if i - n >= 0, go to end
+    D = M               // D = i
+    @n
+    D = D - M           // i - n >= 0
+    @STOP
+    D; JGT
+    @x                  
+    D = M
+    @sum
+    M = M + D           // sum += x
+    @i
+    M = M + 1           //increment i
+    @LOOP
+    0; JMP
+
+(STOP)
+    @sum
+    D = M
+    @R2
+    M = D               //R2 = sum
+
+(END)
+    @END
+    0; JMP
