@@ -11,19 +11,19 @@
 
 // Put your code here.              
 
-    @R0
-    D = M               
-    @x
-    M = D               // x = RAM[0]
-    @R1
-    D = M      
-    @R2
-    M = 0         
-    @n
+    @R0                 // take the value at address 0
+    D = M               // put it in register D
+    @x                  // create a variable x
+    M = D               // assign the value at address 0 to x. x = RAM[0]
+    @R1                 // take the value at address 1
+    D = M               // put it in register D
+    @n                  // create variable n 
     M = D               // n = RAM[1]
-    @i                  
-    M = 1               // i = 0 
-    @sum
+    @R2                 // go to address 2, where we will put the product of R1 and R0
+    M = 0               // Initialise it to 0
+    @i                  // create a variable i that acts as a counter
+    M = 0               // i = 1 
+    @sum                // we will store the result in a variable sum
     M = 0               // sum = 0
 
 (LOOP)                  // add n times x to sum
@@ -32,7 +32,7 @@
     @n
     D = D - M           // i - n >= 0
     @STOP
-    D; JGT
+    D; JGE
     @x                  
     D = M
     @sum
