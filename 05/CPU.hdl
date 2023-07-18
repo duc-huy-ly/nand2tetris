@@ -40,4 +40,52 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    // Instruction decoding the control bits
+    Mux16(a=false, b=instruction, sel=instruction[15], 
+        out[0]=cJGT,
+        out[1]=cJEQ,
+        out[2]=cJLT,
+        out[3]=writeM,
+        out[4]=cRegD,
+        out[5]=cRegA,
+        out[6]=cno,
+        out[7]=cf,
+        out[8]=cny,
+        out[9]=czy,
+        out[10]=cnx,
+        out[11]=czx,
+        out[12]=cMux16MInput,
+        out[15]=cType);
+    
+    Not(in=cType, out=notCType);
+    Or(a=notCType, b=cRegA, out=loadA);
+    
+    Mux16(a=instruction, b=aluOut, sel=cType, out=mux16toAReg);
+    Mux16(a=inM, b=aRegOut, sel=cMux16MInput, out=yIn);
+
+    ARegister(in=aluOut, load=loadA, out=aRegOut, out[0..14]=addressM);
+    DRegister(in=aluOut, load=cRegD, out=xIn);
+    
+    ALU(x=xIn, y=yIn, zx=czx, nx=cnx, zy=czy, ny=cny, 
+        f=cf, no=cno, out=outM,
+        out= aluOut, zr=czr, ng=cng);
+
+    Not(in=czr, out=notzr);
+    Not(in=cng, out=notng);
+    And(a=notng, b=notzr, out=cpos);
+
+    And(a=cJEQ, b=czr, out=JEQ);
+    And(a=cJLT, b=cng, out=JLT);
+    And(a=cJGT, b=cpos, out=JGT);
+    
+    Or(a=JEQ, b=JLT, out=JEQorJLT);
+    Or(a=JEQorJLT, b=JGT, out=jump);
+
+    PC(in=aRegOut, load=jump, inc=true, reset=reset, out[0..14]=pc, out[15]=false);
+
+
+
+   
+
+
 }
